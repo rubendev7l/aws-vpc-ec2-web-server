@@ -1,8 +1,16 @@
 # ☁️ AWS re/Start Lab | Build a VPC and Deploy a Web Server
 
+![AWS](https://img.shields.io/badge/AWS-re/Start-FF9900?style=for-the-badge&logo=amazonaws)
+
+![Linux](https://img.shields.io/badge/Amazon%20Linux-2023-232F3E?style=for-the-badge&logo=amazonaws)
+
+![Status](https://img.shields.io/badge/Status-Concluído-success?style=for-the-badge)
+
+![License](https://img.shields.io/badge/Learning_Project-blue?style=for-the-badge)
+
 <p align="center">
 
-<img src="images/banner-aws-restart.png" width="50%">
+<img src="images/banner-aws-restart.png" width="35%">
 
 </p>
 
@@ -292,6 +300,16 @@ Este repositório possui uma documentação própria criada durante os estudos c
 - Observações para versões atuais da AWS
 
 O objetivo é servir como material de revisão e também auxiliar outros estudantes da formação AWS re/Start.
+
+---
+
+# ✅ Resultado Final
+
+<p align="center">
+<img src="images/final-result.png" width="900">
+</p>
+
+A aplicação foi implantada com sucesso em uma instância Amazon EC2 utilizando Apache HTTP Server, acessível por meio do endereço IPv4 público.
 
 ---
 
