@@ -147,7 +147,9 @@ unzip lab-app.zip -d /var/www/html/
 
 ## Amazon VPC
 
-<img src="images/vpc.png">
+<img src="images/vpc.png"> 
+<img width="1024" height="469" alt="image" src="https://github.com/user-attachments/assets/2eef6bfa-c084-4101-a4b5-839a6970558f" />
+
 
 ---
 
