@@ -2,7 +2,7 @@
 
 <p align="center">
 
-<img src="images/banner-aws-restart.png" width="100%">
+<img src="images/banner-aws-restart.png" width="50%">
 
 </p>
 
