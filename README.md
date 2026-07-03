@@ -2,7 +2,7 @@
 
 <p align="center">
 
-<img src="assets/banner.png" width="100%">
+<img src="assets/banner-aws-restart.png" width="100%">
 
 </p>
 
@@ -148,38 +148,57 @@ unzip lab-app.zip -d /var/www/html/
 ## Amazon VPC
 
 <img src="images/amazon-vpc.png"> 
-<img width="1024" height="469" alt="image" src="https://github.com/user-attachments/assets/2eef6bfa-c084-4101-a4b5-839a6970558f" />
-
 
 ---
 
-## Security Group
+## Componentes da Arquitetura
 
-<img src="images/security-group.png">
-
----
-
-## Amazon EC2
-
-<img src="images/ec2-running.png">
-
----
-
-## Servidor Web
-
-<img src="images/apache-homepage.png">
+<table>
+  <tr>
+    <td align="center">
+      <strong>🛡️ Security Group</strong><br><br>
+      <img src="images/security-group.png" width="250">
+    </td>
+    <td align="center">
+      <strong>🖥️ Amazon EC2</strong><br><br>
+      <img src="images/ec2-running.png" width="250">
+    </td>
+    <td align="center">
+      <strong>🌐 Servidor Web</strong><br><br>
+      <img src="images/apache-homepage.png" width="250">
+    </td>
+  </tr>
+</table>
 
 ---
 
 # 🔍 Troubleshooting
 
-Durante a execução do laboratório foi identificado que o script disponibilizado originalmente pela AWS não era totalmente compatível com a versão atual do Amazon Linux.
+Durante a execução do laboratório foi identificado que o script disponibilizado originalmente pela AWS não era totalmente compatível com a versão atual do Amazon Linux 2023.
 
-Ao invés de apenas substituir comandos por tentativa e erro, foi realizado um processo de investigação utilizando os próprios logs da instância.
+Em vez de modificar o script por tentativa e erro, foi realizada uma investigação baseada em evidências utilizando inicialmente os **System Logs da instância no Console da AWS** e, posteriormente, os logs diretamente pela linha de comando.
+
+Essa abordagem permitiu identificar rapidamente a origem da falha e validar a solução aplicada.
+
+---
 
 ## Processo de investigação
 
-### 1️⃣ Verificação do serviço
+### 1️⃣ Análise do System Log da instância (AWS Console)
+
+Após a inicialização da EC2, foi acessado:
+
+**EC2 → Actions → Monitor and troubleshoot → Get system log**
+
+O log indicou que o processo de inicialização (**Cloud-Init**) havia encontrado erros durante a execução do **User Data**, sinalizando que o Apache não havia sido instalado corretamente.
+
+> Essa foi a primeira evidência utilizada para iniciar o processo de diagnóstico.
+
+---
+
+### 2️⃣ Validação pela CLI
+
+Após conectar à instância via **EC2 Instance Connect**, foi verificado o status do serviço:
 
 ```bash
 systemctl status httpd
@@ -191,49 +210,55 @@ Resultado:
 Unit httpd.service could not be found.
 ```
 
+Isso confirmou que o Apache realmente não havia sido instalado.
+
 ---
 
-### 2️⃣ Investigação do Cloud-Init
+### 3️⃣ Investigação do Cloud-Init
+
+Para entender por que o User Data havia falhado:
 
 ```bash
 sudo cat /var/log/cloud-init-output.log
 ```
 
-Esse log mostrou que o script enviado pelo User Data não havia sido executado corretamente.
+Esse log apresentou os detalhes da execução do script durante o boot da instância, permitindo localizar a origem do problema.
 
 ---
 
-### 3️⃣ Validação do User Data
+### 4️⃣ Conferência do User Data recebido
 
 ```bash
 sudo cat /var/lib/cloud/instance/user-data.txt
 ```
 
-Com essa validação foi possível confirmar o conteúdo realmente recebido pela instância.
+Essa etapa confirmou exatamente qual script havia sido recebido e executado pela instância.
 
 ---
 
-### 4️⃣ Correção
+### 5️⃣ Correção aplicada
 
-Foi realizada a adaptação do script para o Amazon Linux 2023 utilizando:
+Após identificar a causa da falha, o script foi adaptado para o Amazon Linux 2023 utilizando:
 
-- dnf
-- systemctl
-- instalação correta do Apache
-- inicialização automática do serviço
+- `dnf` como gerenciador de pacotes;
+- instalação correta do Apache HTTP Server;
+- inicialização automática do serviço (`systemctl enable` e `systemctl start`);
+- download e extração da aplicação web;
+- ajuste das permissões necessárias para o diretório do servidor web.
 
 ---
 
 ## Resultado
 
-✔ Apache instalado
+✔ Apache instalado com sucesso
 
-✔ Serviço iniciado
+✔ Serviço iniciado automaticamente
 
-✔ Página publicada
+✔ Aplicação Web publicada
 
 ✔ Instância acessível via navegador
 
+✔ Diagnóstico realizado utilizando evidências do Console da AWS e da CLI
 ---
 
 # 💡 Principais Aprendizados
